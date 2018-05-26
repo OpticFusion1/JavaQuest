@@ -1,10 +1,10 @@
 0. COPYRIGHT INFORMATION
 
-Copyright (c) <year> <copyright owner>
+Copyright (c) 2018 Zkirmisher
 All rights reserved.
 
-Software: <name software and version if applicable>
-Licensor: <legal name of licensor>
+Software: JavaQuest
+Licensor: Zkirmisher <zkirmisher@hotmail.com>
 
 
 1. LICENSE GRANT
