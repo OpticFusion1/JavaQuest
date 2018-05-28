@@ -1,4 +1,3 @@
-// IMPORTS
 import static java.lang.Math.sqrt;
 import static java.lang.Math.atan2;
 import static java.lang.Math.acos;
@@ -7,9 +6,9 @@ import static java.lang.Math.acos;
 /**
  * Bidimensional vector: (x, y) plus Vector2 math
  */
-public final class Vector2 implements Comparable<Vector2>, Cloneable {
+public class Vector2 implements Comparable<Vector2>, Cloneable {
 
-    // MEMBER VARIABLES
+    // ATTRIBUTES
     private float x = 0f;
     private float y = 0f;
 
@@ -128,7 +127,7 @@ public final class Vector2 implements Comparable<Vector2>, Cloneable {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
+    protected final Object clone() throws CloneNotSupportedException {
         return this;
     }
 
@@ -155,7 +154,7 @@ public final class Vector2 implements Comparable<Vector2>, Cloneable {
      * @return Vector going from A to B
      */
     public static Vector2 sub(final Vector2 A, final Vector2 B) {
-        return add(A, Vector2.mult(B, -1));
+        return Vector2.add(A, Vector2.mult(B, -1));
     }
 
     /**
@@ -178,7 +177,7 @@ public final class Vector2 implements Comparable<Vector2>, Cloneable {
      * always in range [0.0 , pi]
      */
     public static double angleBetween(final Vector2 A, final Vector2 B) {
-        return acos( dot(A, B) / (A.mag() * B.mag()) );
+        return acos( Vector2.dot(A, B) / (A.mag() * B.mag()) );
     }
 
 }
