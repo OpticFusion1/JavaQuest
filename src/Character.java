@@ -5,13 +5,14 @@ import static java.lang.Math.min;
 /**
  * RPG Character abstraction for JavaQuest
  */
-public abstract class Character implements Cloneable {
+public abstract class Character {
 
 	// ATTRIBUTES
-	public final String name;
-
-	public String role = "None";
+	private String name;
 	private int level = 0;
+
+	private String role = "None";
+	private StatCalculator statCalculator;
 
 	private int maxHealthPoints = 1;
 	private int maxMagicPoints = 0;
@@ -29,7 +30,6 @@ public abstract class Character implements Cloneable {
 	private int dexterity = 0;
 	private int intelligence = 0;
 
-	//@NOTE after those, check if class is still Cloneable
 	//@TODO equipment[]
 	//@TODO skills[]
 	//@TODO abilities[]
@@ -38,18 +38,33 @@ public abstract class Character implements Cloneable {
 
 	// CONSTRUCTORS
 	public Character(
-		String name,
-		String role,
+		final String name,
 		int level,
+		final String role
+	) throws NullPointerException {
+		try {
+			setName(name);
+		} catch (NullPointerException err) {
+			throw err;
+		}
+		this.level = level;
+		setRole(role);
+	}
+
+	public Character(
+		final String name,
+		int level,
+		final String role,
+		final StatCalculator statCalculator,
 		int hp,
 		int mp,
 		int str,
 		int dex,
 		int intel
-	) {
-		this.name = name;
-		this.role = role;
-		this.level = level;
+	) throws NullPointerException {
+		this(name, level, role);
+
+		setStatCalculator(statCalculator);
 
 		maxHealthPoints = hp;
 		maxMagicPoints = mp;
@@ -66,18 +81,19 @@ public abstract class Character implements Cloneable {
 		intelligence = defaultIntelligence;
 	}
 
-	public Character(
-		String name,
-		String role,
-		int level
-	) {
-		this.name = name;
-		this.role = role;
-		this.level = level;
-	}
-
 
 	// METHODS
+	public String name() {
+		return name;
+	}
+
+	public void setName(final String name) throws NullPointerException {
+		if (name == null) {
+			throw new NullPointerException("Character name can't be null.");
+		}
+		this.name = name;
+	}
+
 	public int level() {
 		return level;
 	}
@@ -86,12 +102,34 @@ public abstract class Character implements Cloneable {
 		++level;
 	}
 
+	public String role() {
+		return role;
+	}
+
+	public void setRole(final String role) {
+		this.role = (role != null) ? role : "";
+	}
+
+	public StatCalculator calculate() {
+		return statCalculator;
+	}
+
+	public void setStatCalculator(final StatCalculator statCalculator) {
+		if (statCalculator == null) {
+			throw new IllegalArgumentException("Must provide a non-null StatCalculator!");
+		}
+		this.statCalculator = statCalculator;
+	}
+
 	public int maxHealth() {
 		return maxHealthPoints;
 	}
 
 	public void setMaxHealth(int maxHP) {
-		maxHealthPoints = max(1, maxHP);
+		if (maxHP < 1) {
+			throw new IllegalArgumentException("Maximum HP should be a positive value!");
+		}
+		maxHealthPoints = maxHP;
 	}
 
 	public int maxMagic() {
@@ -99,7 +137,10 @@ public abstract class Character implements Cloneable {
 	}
 
 	public void setMaxMagic(int maxMP) {
-		maxMagicPoints = max(0, maxMP);
+		if (maxMP < 0) {
+			throw new IllegalArgumentException("Maximum MP can't be a negative value!");
+		}
+		maxMagicPoints = maxMP;
 	}
 
 	public int health() {
@@ -114,14 +155,14 @@ public abstract class Character implements Cloneable {
 	 * Increases the Character's current HP
 	 */
 	public void heal(int healing) {
-		setHealth(healthPoints + max(0, healing));
+		setHealth(healthPoints + healing);
 	}
 
 	/**
 	 * Decreases the Character's current HP
 	 */
 	public void wound(int damage) {
-		setHealth(healthPoints - max(0, damage));
+		setHealth(healthPoints - damage);
 	}
 
 	public boolean isDead() {
@@ -140,14 +181,14 @@ public abstract class Character implements Cloneable {
 	 * Increases the Character's current MP
 	 */
 	public void restore(int mana) {
-		setMagic(magicPoints + max(0, mana));
+		setMagic(magicPoints + mana);
 	}
 
 	/**
 	 * Decreases the Character's current MP
 	 */
 	public void deplete(int manaCost) {
-		setMagic(magicPoints - max(0, manaCost));
+		setMagic(magicPoints - manaCost);
 	}
 
 	public int poisonCount() {
@@ -176,7 +217,10 @@ public abstract class Character implements Cloneable {
 	 * Sets STR default value
 	 */
 	public void setStrength(int str) {
-		defaultStrength = max(0, str);
+		if (str < 0) {
+			throw new IllegalArgumentException("STR should be a positive value!");
+		}
+		defaultStrength = str;
 	}
 
 	public int defaultDexterity() {
@@ -187,7 +231,10 @@ public abstract class Character implements Cloneable {
 	 * Sets DEX default value
 	 */
 	public void setDexterity(int dex) {
-		defaultDexterity = max(0, dex);
+		if (dex < 0) {
+			throw new IllegalArgumentException("DEX should be a positive value!");
+		}
+		defaultDexterity = dex;
 	}
 
 	public int defaultIntelligence() {
@@ -198,7 +245,10 @@ public abstract class Character implements Cloneable {
 	 * Sets INT default value
 	 */
 	public void setIntelligence(int intel) {
-		defaultIntelligence = max(0, intel);
+		if (intel < 0) {
+			throw new IllegalArgumentException("INT should be a positive value!");
+		}
+		defaultIntelligence = intel;
 	}
 
 	/**
@@ -244,7 +294,7 @@ public abstract class Character implements Cloneable {
 	public void rest() {
 		healthPoints = maxHealthPoints;
 		magicPoints = maxMagicPoints;
-		poison = 0;
+		remedy();
 		strength = defaultStrength;
 		dexterity = defaultDexterity;
 		intelligence = defaultIntelligence;
@@ -253,12 +303,12 @@ public abstract class Character implements Cloneable {
     @Override
 	public String toString() {
 		return String.format(
-			"%s - LVL %d %s\n " +
-			"HP: %d/%d\n " +
-			"MP: %d/%d\n " +
-			"%d poison\n " +
-			"STR: %d (%d)\n " +
-			"DEX: %d (%d)\n " +
+			"%s - LVL %d %s\n" +
+			"HP: %d/%d\n" +
+			"MP: %d/%d\n" +
+			"%d poison\n" +
+			"STR: %d (%d)\n" +
+			"DEX: %d (%d)\n" +
 			"INT: %d (%d)",
 			name, level, role,
 			healthPoints, maxHealthPoints,
@@ -269,11 +319,6 @@ public abstract class Character implements Cloneable {
 			defaultIntelligence, (intelligence() - defaultIntelligence)
 		);
 	}
-
-	@Override
-    protected final Object clone() throws CloneNotSupportedException {
-        return this;
-    }
 
 
 	// CLASS FUNCTIONS
@@ -287,7 +332,7 @@ public abstract class Character implements Cloneable {
 	 * @return If value is already in range, returns it as it is;
 	 * else, returns the limit it has gone through.
 	 */
-	protected static int limit(int value, int floor, int ceil) {
+	private static int limit(int value, int floor, int ceil) {
 		if (value <= ceil && value >= floor) {
 			return value;
 
