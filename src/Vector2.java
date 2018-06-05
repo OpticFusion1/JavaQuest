@@ -105,7 +105,7 @@ public class Vector2 implements Comparable<Vector2>, Cloneable {
      */
     @Override
     public String toString() {
-        return String.format("(%f, %f)", x, y);
+        return String.format(java.util.Locale.US, "(%.2f, %.2f)", x, y);
     }
 
     /**

@@ -1,20 +1,19 @@
-import static java.lang.Math.abs;
-
-
-public class PlayerCalculator implements StatCalculator {
+public abstract class PlayerCalculator implements StatCalculator {
 
 	// METHODS
 	public long exp(int level) {
-		return 10 * PlayerCalculator.fibonacci(level);
+		return 10 * PlayerCalculator.fibonacci(level); //FIXME since longs are signed, overflows after level 40
 	}
 
-	public int hp(int level) {
-		return 25 + 75 * level;
-	}
+	public abstract int hp(int level);
 
-	public int mp(int level) {
-		return 50 * level;
-	}
+	public abstract int mp(int level);
+
+	public abstract int attack(int str);
+
+	public abstract int spell(int intel);
+
+	public abstract int crit(int dex);
 
 
 	// CLASS FUNCTIONS
@@ -23,7 +22,7 @@ public class PlayerCalculator implements StatCalculator {
 		int next = 1;
 		int result = 1;
 
-		for (int i = 0; i < abs(n); i++) {
+		for (int i = 0; i < n; i++) {
 			result = previous + next;
 			previous = next;
 			next = result;

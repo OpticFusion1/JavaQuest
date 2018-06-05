@@ -1,20 +1,80 @@
 public class Game {
 
 	public static void main(String[] args) {
-		Player my_char = new Player();
+		Player adventurer = new Player();
 
-		my_char.setName("Zkirmisher");
-		my_char.setRole("Mage");
-		my_char.addModifier(-2, +1, +2);
-		my_char.wither();
-		my_char.deplete(25);
-		my_char.wound(90);
+		Player mage = new Player();
+		mage.setRole("Mage");
+		mage.setStatCalculator(new MageCalculator());
 
-		System.out.println(my_char.toString());
+		Player warrior = new Player();
+		warrior.setRole("Warrior");
+		warrior.setStatCalculator(new WarriorCalculator());
 
-		my_char.gainExperience(37);
+		Player thief = new Player();
+		thief.setRole("Thief");
+		thief.setStatCalculator(new ThiefCalculator());
 
-		System.out.println("\n" + my_char.toString());
+		Player[] players = new Player[] {
+			adventurer, mage, warrior, thief,
+		};
+
+		System.out.println("\"LVL\",\"Class\",\"HP\",\"MP\",\"AD\",\"SD\",\"CR\",\"EXP\"");
+
+		for (int level = 1; level <= 40; level++) {
+			for (Player player : players) {
+				System.out.println(String.format(java.util.Locale.US,
+					"%d,%s,%d,%d,%d,%d,%.2f,%d",
+					player.level(), player.role(), player.maxHealth(), player.maxMagic(),
+					player.attackDamage(), player.spellDamage(), player.criticalRate(), player.nextLevelExp()
+				));
+
+				player.levelUp();
+
+				switch (player.role()) {
+					case "Adventurer":
+						player.spendAP("STR");
+						player.spendAP("STR");
+						player.spendAP("STR");
+						player.spendAP("DEX");
+						player.spendAP("DEX");
+						break;
+					
+					case "Mage":
+						player.spendAP("INT");
+						player.spendAP("INT");
+						player.spendAP("INT");
+						player.spendAP("INT");
+						player.spendAP("INT");
+						break;
+					
+					case "Warrior":
+						player.spendAP("STR");
+						player.spendAP("STR");
+						player.spendAP("STR");
+						player.spendAP("STR");
+						player.spendAP("DEX");
+						break;
+					
+					case "Thief":
+						if (player.defaultDexterity() < 100) {
+							player.spendAP("DEX");
+							player.spendAP("DEX");
+							player.spendAP("DEX");
+							player.spendAP("DEX");
+							player.spendAP("DEX");
+						} else {
+							player.spendAP("STR");
+							player.spendAP("STR");
+							player.spendAP("STR");
+							player.spendAP("STR");
+							player.spendAP("STR");
+						}
+						break;
+				}
+			}
+		}
+
 	}
 
 }

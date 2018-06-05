@@ -12,10 +12,7 @@ public abstract class Character {
 	private int level = 0;
 
 	private String role = "None";
-	private StatCalculator statCalculator;
-
-	private int maxHealthPoints = 1;
-	private int maxMagicPoints = 0;
+	private StatCalculator calculator;
 
 	private int healthPoints = 1;
 	private int magicPoints = 0;
@@ -30,47 +27,36 @@ public abstract class Character {
 	private int dexterity = 0;
 	private int intelligence = 0;
 
-	//@TODO equipment[]
-	//@TODO skills[]
-	//@TODO abilities[]
-	//@TODO inventory[]
+	// TODO setters & getters
+	//private ArrayList<Item> equipment; // TODO Item class // TODO Armor and MagicRes methods from equipment
+	//private ArrayList<Skill> skills; // TODO Skills class
+	//private ArrayList<Ability> abilities; // TODO Abilities class
+	//private ArrayList<Item> inventory;
 
 
 	// CONSTRUCTORS
 	public Character(
 		final String name,
 		int level,
-		final String role
+		final String role,
+		StatCalculator calculator,
+		int str,
+		int dex,
+		int intel
 	) throws NullPointerException {
 		try {
 			setName(name);
 		} catch (NullPointerException err) {
 			throw err;
 		}
+
 		this.level = level;
+
 		setRole(role);
-	}
+		setStatCalculator(calculator);
 
-	public Character(
-		final String name,
-		int level,
-		final String role,
-		final StatCalculator statCalculator,
-		int hp,
-		int mp,
-		int str,
-		int dex,
-		int intel
-	) throws NullPointerException {
-		this(name, level, role);
-
-		setStatCalculator(statCalculator);
-
-		maxHealthPoints = hp;
-		maxMagicPoints = mp;
-
-		healthPoints = maxHealthPoints;
-		magicPoints = maxMagicPoints;
+		healthPoints = calculator.hp(level);
+		magicPoints = calculator.mp(level);
 
 		defaultStrength = str;
 		defaultDexterity = dex;
@@ -111,36 +97,53 @@ public abstract class Character {
 	}
 
 	public StatCalculator calculate() {
-		return statCalculator;
+		return calculator;
 	}
 
-	public void setStatCalculator(final StatCalculator statCalculator) {
-		if (statCalculator == null) {
-			throw new IllegalArgumentException("Must provide a non-null StatCalculator!");
-		}
-		this.statCalculator = statCalculator;
+	public void setStatCalculator(final StatCalculator calculator) {
+		this.calculator = (calculator != null) ? calculator : new NullStatCalculator();
+	}
+
+	public long exp() {
+		return calculator.exp(level);
+	}
+
+	public int attackDamage() {
+		return calculator.attack( strength() ); //TODO also apply equipment
+	}
+
+	public int spellDamage() {
+		return calculator.spell( intelligence() ); //TODO also apply equipment
+	}
+
+	/**
+	 * Returns raw critical value, use criticalRate() to get percentage value (0 to 100)
+	 */
+	public int critical() {
+		return calculator.crit( dexterity() ); //TODO also apply equipment
+	}
+
+	/**
+	 * Returns critical chance going from 0 to 100
+	 */
+	public float criticalRate() {
+		return critical() / 1000f;
+	}
+
+	public int armour() {
+		return 0; //TODO needs equipment
+	}
+
+	public int negation() {
+		return 0; //TODO needs equipment
 	}
 
 	public int maxHealth() {
-		return maxHealthPoints;
-	}
-
-	public void setMaxHealth(int maxHP) {
-		if (maxHP < 1) {
-			throw new IllegalArgumentException("Maximum HP should be a positive value!");
-		}
-		maxHealthPoints = maxHP;
+		return calculator.hp(level); //TODO also apply equipment
 	}
 
 	public int maxMagic() {
-		return maxMagicPoints;
-	}
-
-	public void setMaxMagic(int maxMP) {
-		if (maxMP < 0) {
-			throw new IllegalArgumentException("Maximum MP can't be a negative value!");
-		}
-		maxMagicPoints = maxMP;
+		return calculator.mp(level); //TODO also apply equipment
 	}
 
 	public int health() {
@@ -148,7 +151,7 @@ public abstract class Character {
 	}
 
 	private void setHealth(int hp) {
-		healthPoints = limit(hp, 0, maxHealthPoints);
+		healthPoints = limit(hp, 0, maxHealth());
 	}
 
 	/**
@@ -174,7 +177,7 @@ public abstract class Character {
 	}
 
 	private void setMagic(int mp) {
-		magicPoints = limit(mp, 0, maxMagicPoints);
+		magicPoints = limit(mp, 0, maxMagic());
 	}
 
 	/**
@@ -292,8 +295,8 @@ public abstract class Character {
 	 * removes all non-equipment modifiers.
 	 */
 	public void rest() {
-		healthPoints = maxHealthPoints;
-		magicPoints = maxMagicPoints;
+		healthPoints = maxHealth();
+		magicPoints = maxMagic();
 		remedy();
 		strength = defaultStrength;
 		dexterity = defaultDexterity;
@@ -302,21 +305,21 @@ public abstract class Character {
 
     @Override
 	public String toString() {
-		return String.format(
+		return String.format(java.util.Locale.US,
 			"%s - LVL %d %s\n" +
-			"HP: %d/%d\n" +
-			"MP: %d/%d\n" +
+			"HP: %d / %d\n" +
+			"MP: %d / %d\n" +
 			"%d poison\n" +
-			"STR: %d (%d)\n" +
-			"DEX: %d (%d)\n" +
-			"INT: %d (%d)",
+			"STR: %d (%d)\tAD: %d\n" +
+			"DEX: %d (%d)\tCR: %.2f%%\n" +
+			"INT: %d (%d)\tSD: %d",
 			name, level, role,
-			healthPoints, maxHealthPoints,
-			magicPoints, maxMagicPoints,
+			healthPoints, maxHealth(),
+			magicPoints, maxMagic(),
 			poison,
-			defaultStrength, (strength() - defaultStrength),
-			defaultDexterity, (dexterity() - defaultDexterity),
-			defaultIntelligence, (intelligence() - defaultIntelligence)
+			defaultStrength, (strength() - defaultStrength), attackDamage(),
+			defaultDexterity, (dexterity() - defaultDexterity), criticalRate(),
+			defaultIntelligence, (intelligence() - defaultIntelligence), spellDamage()
 		);
 	}
 
