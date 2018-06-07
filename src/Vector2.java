@@ -1,12 +1,13 @@
 import static java.lang.Math.sqrt;
 import static java.lang.Math.atan2;
 import static java.lang.Math.acos;
+import java.util.Locale;
 
 
 /**
  * Bidimensional vector: (x, y) plus Vector2 math
  */
-public class Vector2 implements Comparable<Vector2>, Cloneable {
+public class Vector2 implements Comparable<Vector2> {
 
     // ATTRIBUTES
     private float x = 0f;
@@ -105,7 +106,7 @@ public class Vector2 implements Comparable<Vector2>, Cloneable {
      */
     @Override
     public String toString() {
-        return String.format(java.util.Locale.US, "(%.2f, %.2f)", x, y);
+        return String.format(Locale.ROOT, "(%.2f, %.2f)", x, y);
     }
 
     /**
@@ -124,11 +125,6 @@ public class Vector2 implements Comparable<Vector2>, Cloneable {
         if (this.x < that.x) return -1;
         if (this.x > that.x) return +1;
         return 0;
-    }
-
-    @Override
-    protected final Object clone() throws CloneNotSupportedException {
-        return this;
     }
 
 

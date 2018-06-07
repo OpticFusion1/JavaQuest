@@ -10,15 +10,15 @@ public class AdventurerCalculator extends PlayerCalculator {
 	}
 
 	public int attack(int str) {
-		return str * 8;
+		return str * 4;
 	}
 
 	public int spell(int intel) {
-		return intel * 10;
+		return intel * 5;
 	}
 
 	public int crit(int dex) {
-		return dex * 666;
+		return dex * 444;
 	}
 
 }

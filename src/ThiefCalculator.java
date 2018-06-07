@@ -10,15 +10,15 @@ public class ThiefCalculator extends PlayerCalculator {
 	}
 
 	public int attack(int str) {
-		return str * 15;
+		return (int)(str * 7.5);
 	}
 
 	public int spell(int intel) {
-		return intel * 5;
+		return (int)(intel * 2.5);
 	}
 
 	public int crit(int dex) {
-		return dex * 1000;
+		return (int)(dex * 666.667);
 	}
 
 }

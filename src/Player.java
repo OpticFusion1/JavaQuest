@@ -1,3 +1,7 @@
+import java.util.regex.*;
+import java.util.Locale;
+
+
 /**
  * JavaQuest user-playable Character
  */
@@ -7,6 +11,7 @@ public class Player extends Character {
 	private long experiencePoints = 0;
 	private int attributePoints = 0;
 	private int skillPoints = 0;
+
 
 	// CONSTRUCTORS
 	public Player() {
@@ -49,28 +54,28 @@ public class Player extends Character {
 	 */
 	public void spendAP(final String stat) {
 		if (stat == null) {
-			throw new NullPointerException();
+			throw new NullPointerException("STAT string can't be null.");
 		}
 
-		if (attributePoints <= 0) {
+		if (attributePoints < 1) {
 			return;
 		}
 
-		switch (stat.toUpperCase()) {
+		switch (stat) {
 			case "STR":
-				setStrength(defaultStrength() + 1);
+				setDefaultStrength(defaultStrength() + 1);
 				break;
 			
 			case "DEX":
-				setDexterity(defaultDexterity() + 1);
+				setDefaultDexterity(defaultDexterity() + 1);
 				break;
 			
 			case "INT":
-				setIntelligence(defaultIntelligence() + 1);
+				setDefaultIntelligence(defaultIntelligence() + 1);
 				break;
 			
 			default:
-				return;
+				throw new IllegalArgumentException("Specified STAT doesn't exist.");
 		}
 
 		--attributePoints;
@@ -85,8 +90,12 @@ public class Player extends Character {
 	}*/
 
 	@Override
-	public void setName(final String name) {
-		//TODO valid name verification (throw something)
+	public void setName(final String name) throws RuntimeException {
+		if (!Pattern.compile("^\\w{3,15}$").matcher(name).matches() ||
+			Pattern.compile(".*_{2,}.*").matcher(name).matches()	) {
+			throw new IllegalArgumentException("Invalid name: Should have from 3 to 15 characters, those being only letters, numbers and \"_\". Can't have two \"_\"s in a row.");
+		}
+
 		super.setName(name);
 	}
 
@@ -98,15 +107,14 @@ public class Player extends Character {
 
 	@Override
 	public void levelUp() {
-		attributePoints += 5; //TODO statCalculate
-		skillPoints += 3; //TODO statCalculate
+		attributePoints += 5;
+		skillPoints += 1;
 		super.levelUp();
-		rest();
 	}
 
 	@Override
 	public String toString() {
-		return String.format(java.util.Locale.US,
+		return String.format(Locale.ROOT,
 			"%s\n" +
 			"AP: %d\tSP: %d\n" +
 			"EXP: %d / %d",

@@ -1,3 +1,6 @@
+import java.util.Locale;
+
+
 public class Game {
 
 	public static void main(String[] args) {
@@ -23,7 +26,7 @@ public class Game {
 
 		for (int level = 1; level <= 40; level++) {
 			for (Player player : players) {
-				System.out.println(String.format(java.util.Locale.US,
+				System.out.println(String.format(Locale.ROOT,
 					"%d,%s,%d,%d,%d,%d,%.2f,%d",
 					player.level(), player.role(), player.maxHealth(), player.maxMagic(),
 					player.attackDamage(), player.spellDamage(), player.criticalRate(), player.nextLevelExp()

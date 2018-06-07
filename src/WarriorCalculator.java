@@ -10,15 +10,15 @@ public class WarriorCalculator extends PlayerCalculator {
 	}
 
 	public int attack(int str) {
-		return (int)(str * 12.5);
+		return (int)(str * 6.25);
 	}
 
 	public int spell(int intel) {
-		return intel * 4;
+		return intel * 2;
 	}
 
 	public int crit(int dex) {
-		return dex * 500;
+		return (int)(dex * 333.333);
 	}
 
 }

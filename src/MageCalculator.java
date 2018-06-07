@@ -10,15 +10,15 @@ public class MageCalculator extends PlayerCalculator {
 	}
 
 	public int attack(int str) {
-		return str * 5;
+		return (int)(str * 2.5);
 	}
 
 	public int spell(int intel) {
-		return intel * 15;
+		return (int)(intel * 7.5);
 	}
 
 	public int crit(int dex) {
-		return dex * 250;
+		return (int)(dex * 166.667);
 	}
 
 }
