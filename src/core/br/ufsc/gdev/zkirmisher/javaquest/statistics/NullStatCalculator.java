@@ -1,5 +1,8 @@
+package br.ufsc.gdev.zkirmisher.javaquest.statistics;
+
+
 /**
- * NullObject pattern for StatCalculator
+ * NullObject pattern for StatCalculator.
  */
 public class NullStatCalculator implements StatCalculator {
 
