@@ -2,7 +2,6 @@ package br.ufsc.gdev.zkirmisher.javaquest.entities;
 
 
 import static java.lang.Math.min;
-import java.util.Locale;
 import java.util.function.Function;
 
 import br.ufsc.gdev.zkirmisher.javaquest.statistics.*;
@@ -15,9 +14,9 @@ public class Character {
 
 	// CONSTANTS
 	//stats
-	public static final int STR = 0;
-	public static final int DEX = 1;
-	public static final int INT = 2;
+	public static final String STR = "STR";
+	public static final String DEX = "DEX";
+	public static final String INT = "INT";
 
 
 	// ATTRIBUTES
@@ -52,7 +51,7 @@ public class Character {
 
 	// CONSTRUCTORS
 	/**
-	 * @param role Fills as "None" if null.
+	 * @param role  - fills role as "None" if null.
 	 */
 	public Character (
 		final String name,
@@ -65,7 +64,7 @@ public class Character {
 	}
 
 	/**
-	 * @param role Fills as "None" if null.
+	 * @param role  - fills role as "None" if null.
 	 */
 	public Character(
 		final String name,
@@ -152,7 +151,7 @@ public class Character {
 
 	/**
 	 * Sets Character's role.
-	 * @param role Fills as "None" if null.
+	 * @param role  - fills role as "None" if null.
 	 */
 	public void setRole(final String role) {
 		this.role = role != null ? role : "None";
@@ -164,7 +163,7 @@ public class Character {
 
 	/**
 	 * Changes this Character Statistics Calculator.
-	 * @param calculator Uses NullObject pattern for default returns if null.
+	 * @param calculator  - uses NullObject pattern for default returns if null.
 	 */
 	public void setStatCalculator(final StatCalculator calculator) {
 		if (calculator == null) {
@@ -190,6 +189,13 @@ public class Character {
 
 	public int spellDamage() {
 		return calculator.spell( intelligence() ) + spellEquipBonus();
+	}
+
+	/**
+	 * @return Raw critical value in mili%, use criticalRate() to get percentage value (0 to 100).
+	 */
+	public int critical() {
+		return calculator.crit( dexterity() ) + criticalEquipBonus();
 	}
 
 	/**
@@ -416,7 +422,7 @@ public class Character {
 	}
 
 	/**
-	 * @param position Use Item.EQUIP_SUBTYPE as index.
+	 * @param position - uses Item.EQUIP_SUBTYPE as index.
 	 * @return Item equipped at the specified position, null when empty.
 	 *
 	 * @throws ArrayIndexOutOfBoundsException
@@ -467,7 +473,7 @@ public class Character {
 	/**
 	 * Unequips item at the specified index.
 	 *
-	 * @param position Use Item.EQUIP_SUBTYPE as index.
+	 * @param position - uses Item.EQUIP_SUBTYPE as index.
 	 *
 	 * @throws ArrayIndexOutOfBoundsException
 	 */
@@ -489,12 +495,9 @@ public class Character {
 		return true;
 	}
 
-	/**
-	 * NOTE: Primary Stats follow the format: Base (+Equipment) (+Modifier).
-	 */
     @Override
 	public String toString() {
-		return String.format(Locale.ROOT,
+		return String.format(
 			"%s" +
 			"%s - LVL %d %s\n" +
 			"HP: %d / %d\n" +
@@ -509,9 +512,9 @@ public class Character {
 			health(), maxHealth(),
 			magic(), maxMagic(),
 			poison,
-			baseStrength, strengthEquipBonus(), strength() - (baseStrength + strengthEquipBonus()), attackDamage(),
-			baseDexterity, dexterityEquipBonus(), dexterity() - (baseDexterity + dexterityEquipBonus()), criticalRate(),
-			baseIntelligence, intelligenceEquipBonus(), intelligence() - (baseIntelligence + intelligenceEquipBonus()), spellDamage(),
+			strength(), strengthEquipBonus(), strength() - (baseStrength + strengthEquipBonus()), attackDamage(),
+			dexterity(), dexterityEquipBonus(), dexterity() - (baseDexterity + dexterityEquipBonus()), criticalRate(),
+			intelligence(), intelligenceEquipBonus(), intelligence() - (baseIntelligence + intelligenceEquipBonus()), spellDamage(),
 			armour(), armourModifier, negation(), negationModifier
 		);
 	}
@@ -527,14 +530,7 @@ public class Character {
 	}
 
 	/**
-	 * @return Raw critical value, use criticalRate() to get percentage value (0 to 100).
-	 */
-	private int critical() {
-		return calculator.crit( dexterity() ) + criticalEquipBonus();
-	}
-
-	/**
-	 * @param bonusFunction Getter function from Equip class for specific bonus.
+	 * @param bonusFunction - getter function from Equip class for specific bonus.
 	 * @return Sum of all the bonus of specified type given from equipment.
 	 */
 	private int equipBonus(Function<Equip, Integer> bonusFunction) {
@@ -555,9 +551,9 @@ public class Character {
 	/**
 	 * Limits value to a specific range.
 	 *
-	 * @param floor Lower bound.
-	 * @param ceil Upper bound.
-	 * @param value Original value.
+	 * @param floor  - lower bound.
+	 * @param ceil  - upper bound.
+	 * @param value  - original value.
 	 *
 	 * @return If value is already in range, returns it as it is;
 	 * else, returns the limit it has gone through.

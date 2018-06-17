@@ -2,9 +2,6 @@ package br.ufsc.gdev.zkirmisher.javaquest.entities;
 
 
 import static java.lang.Math.min;
-
-import java.util.Locale;
-
 import br.ufsc.gdev.zkirmisher.util.Arrays;
 
 
@@ -122,7 +119,7 @@ public class Inventory {
 
 	/**
 	 * Adds a single item to the inventory if it fits.
-	 * @return true if the inventory wasn't full.
+	 * @return true if the inventory was changed as a result, otherwise false.
 	 */
 	public boolean add(final Item item) {
 		return add(item, 1);
@@ -236,15 +233,22 @@ public class Inventory {
 		return -1;
 	}
 
+	public boolean isEmpty() {
+		for (InventorySlot slot : content) {
+			if (!slot.isEmpty()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	@Override
     public String toString() {
 		String list = "";
 
 		for (int s = 0; s < content.length; ++s) {
 			if (!content[s].isEmpty()) {
-				list += String.format(Locale.ROOT,
-					"[%d] %s\n", s, content[s].toString()
-				);
+				list += String.format("[%d] %s\n%s\n", s, content[s].toString(), content[s].item().description());
 			}
 		}
 

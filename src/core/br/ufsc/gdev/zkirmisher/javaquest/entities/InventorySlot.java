@@ -1,6 +1,5 @@
 package br.ufsc.gdev.zkirmisher.javaquest.entities;
 
-import java.util.Locale;
 
 /**
  * Inventory Slot for holding Items / stacks of Items.
@@ -136,7 +135,7 @@ public class InventorySlot implements Comparable<InventorySlot> {
     	if (isEmpty()) {
     		return "EMPY";
     	} else {
-	        return String.format(Locale.ROOT, "x%d %s", stack, item.name());
+	        return String.format("x%d %s", stack, item.name());
     	}
     }
 

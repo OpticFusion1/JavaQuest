@@ -6,7 +6,6 @@ package br.ufsc.gdev.zkirmisher.javaquest.statistics;
  */
 public interface StatCalculator {
 
-	// METHODS
 	public long exp(int level);
 	public int hp(int level);
 	public int mp(int level);

@@ -8,7 +8,7 @@ import java.util.Locale;
 
 
 /**
- * Bidimensional vector: (x, y).
+ * Bidimensional vector: (x, y) using floating point variables.
  * <p>
  * Includes Vector2 math.
  */
@@ -33,7 +33,7 @@ public class Vector2 implements Comparable<Vector2>, Cloneable {
 
 
     // METHODS
-    public float x() {
+    public float getX() {
         return x;
     }
 
@@ -41,7 +41,7 @@ public class Vector2 implements Comparable<Vector2>, Cloneable {
         this.x = x;
     }
 
-    public float y() {
+    public float getY() {
         return y;
     }
 

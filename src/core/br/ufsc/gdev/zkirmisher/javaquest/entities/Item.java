@@ -1,7 +1,6 @@
 package br.ufsc.gdev.zkirmisher.javaquest.entities;
 
 
-import java.util.Locale;
 import java.util.function.Consumer;
 
 
@@ -25,11 +24,14 @@ public class Item implements Comparable<Item>, Cloneable {
 	/**
 	 * Equip Subtypes
 	 */
-	public static final int EQUIP_SUBTYPES = 4;
+	public static final int EQUIP_SUBTYPES = 7;
 		public static final int EQUIP_WEAPON = 0;
 		public static final int EQUIP_BODY = 1;
 		public static final int EQUIP_HEAD = 2;
 		public static final int EQUIP_LEGS = 3;
+		public static final int EQUIP_BACK = 4;
+		public static final int EQUIP_HAND = 5;
+		public static final int EQUIP_FEET = 6;
 
 
 	// ATTRIBUTES
@@ -50,7 +52,7 @@ public class Item implements Comparable<Item>, Cloneable {
 	}
 
 	/**
-	 * @param description Fills as empty String if null.
+	 * @param description - fills description as empty String if null.
 	 */
 	public Item(
 		final String name, int id,
@@ -61,7 +63,7 @@ public class Item implements Comparable<Item>, Cloneable {
 	}
 
 	/**
-	 * @param useFunction void lambda expression that takes a Character as single argument.
+	 * @param useFunction - void lambda expression that takes a Character as single argument.
 	 */
 	public Item(
 		final String name, int id,
@@ -105,14 +107,14 @@ public class Item implements Comparable<Item>, Cloneable {
 				return 1;
 
 			case Item.USE:
-				return 10;
+				return 15;
 
 			case Item.ETC: default:
 				//see below
 				break;
 		}
 
-		return 20;
+		return 30;
 	}
 
 	public String name() {
@@ -132,7 +134,7 @@ public class Item implements Comparable<Item>, Cloneable {
 
 	/**
 	 * Sets Item description.
-	 * @param description Fills as empty String if null.
+	 * @param description - fills description as empty String if null.
 	 */
 	public void setDescription(final String description) {
 		this.description = description != null ? description : "";
@@ -146,7 +148,7 @@ public class Item implements Comparable<Item>, Cloneable {
 	}
 
 	/**
-	 * @param useFunction lambda expression that takes a Character as single argument.
+	 * @param useFunction - lambda expression that takes a Character as single argument.
 	 */
 	public void setUseFunction(Consumer<Character> useFunction) {
 		this.useFunction = useFunction;
@@ -154,7 +156,7 @@ public class Item implements Comparable<Item>, Cloneable {
 
     @Override
     public String toString() {
-		return String.format(Locale.ROOT,
+		return String.format(
 			"[%d.%d.%d] %s\n" +
 			"%s",
 			type(), subtype(), num(), name,

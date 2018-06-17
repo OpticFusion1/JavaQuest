@@ -1,24 +1,27 @@
-# JavaQuest<br/>
+JavaQuest
+====
+
 -- Read the [License](https://github.com/Zkirmisher/JavaQuest/blob/master/LICENSE.txt) --<br/>
 <br/>
 
-
-## [EN] About<br/>
+[EN] About
+--------
 
 A simple Point &amp; Click RPG game with turn-based combat mechanics built in Java.<br/>
 This project is associated with **[G-Dev UFSC](https://g-devufsc.github.io/)**.<br/>
 <br/>
 
 
-## [PT] Sobre<br/>
+[PT] Sobre
+--------
 
 
-### Objetivo<br/>
+### Objetivo
 
 Produzir um projeto para a disciplina de Programação Orientada a Objetos 1 que demonstre os principais mecanismos da linguagem Java e os conceitos do paradigma da orientação a objetos estudados na sala de aula.<br/>
 
 
-### Descrição<br/>
+### Descrição
 
 JavaQuest é um RPG (**Role-playing Game**) inspirado em jogos de mesa e outros digitais de mesma categoria, como o Dungeons & Dragons, o Magic ou os jogos da [Artix Entertainment](https://portal.battleon.com/). Nele, **personagens** possuem diversos **atributos** caracterizantes (como **força**, **inteligência**, **destreza**) que definem o que podem fazer na aventura (no jogo) e de que forma.<br/>
 

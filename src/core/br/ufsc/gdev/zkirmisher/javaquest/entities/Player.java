@@ -2,8 +2,6 @@ package br.ufsc.gdev.zkirmisher.javaquest.entities;
 
 
 import java.util.regex.*;
-import java.util.Locale;
-
 import br.ufsc.gdev.zkirmisher.javaquest.statistics.*;
 
 
@@ -18,7 +16,7 @@ public class Player extends Character {
 
 	//TODO Skill Points
 
-	private Inventory inventory = new Inventory(15 * Item.TYPES);//XXX Default Player inventory size.
+	private Inventory inventory = new Inventory(15 * Item.TYPES);//NOTE: Default Player inventory size.
 
 
 	// CONSTRUCTORS
@@ -55,13 +53,16 @@ public class Player extends Character {
 	}
 
 	/**
-	 * Exchanges one Attribute Point for a permanent increment of chosen stat.
-	 * @param stat NOTE: depends on constants available at some Character.STAT
-	 * @throws IllegalArgumentException when the specified STAT doesn't exist.
+	 * Exchanges one Attribute Point for a permanent increment of chosen attribute.
+	 *
+	 * @param stat - NOTE: depends on constants available at some Character.ATT
+	 * @return true if there were any points to spend.
+	 *
+	 * @throws IllegalArgumentException when the specified attribute doesn't exist.
 	 */
-	public void spendAP(int stat) {
+	public boolean spendAP(String stat) {
 		if (attributePoints < 1) {
-			return;
+			return false;
 		}
 
 		switch (stat) {
@@ -78,10 +79,11 @@ public class Player extends Character {
 				break;
 
 			default:
-				throw new IllegalArgumentException("Specified STAT doesn't exist.");
+				throw new IllegalArgumentException("Specified attribute doesn't exist.");
 		}
 
 		--attributePoints;
+		return true;
 	}
 
 	public Inventory inventory() {
@@ -94,6 +96,8 @@ public class Player extends Character {
 	 * If it's an Equip, equip it and store the previous one on the inventory.
 	 * <p>
 	 * If it's a consumable, remove it from the inventory.
+	 *
+	 * @throws ArrayIndexOutOfBoundsException
 	 */
 	public void use(int inventoryIndex) {
 		Item item = inventory.get(inventoryIndex);
@@ -101,11 +105,13 @@ public class Player extends Character {
 			return;
 		}
 
-		if (item instanceof Equip) {
-			Equip previous = super.getEquipAt(item.subtype());
-			super.equip((Equip) item);
+		if (item instanceof Equip && canEquip((Equip) item)) {
+			Equip previous = getEquipAt(item.subtype());
+			unequip(previous);
+			equip((Equip) item);
 			inventory.remove(inventoryIndex, 1);
 			inventory.add(previous);
+
 		} else {
 			super.use(item);
 			inventory.remove(inventoryIndex, 1);
@@ -131,32 +137,23 @@ public class Player extends Character {
 		super.levelUp();
 	}
 
-
+	/**
+	 * Unequips item at the specified index and moves it to the inventory.
+	 *
+	 * @param position - uses Item.EQUIP_SUBTYPE as index.
+	 *
+	 * @throws ArrayIndexOutOfBoundsException
+	 */
 	@Override
-	public void use(Item item) {
-		if (item == null) {
-			return;
-		}
-
-		int index = inventory.indexOf(item);
-		if (index >= 0) {
-			this.use(index);
-		}
-	}
-
-	@Override
-	public boolean equip(final Equip item) {
-		if (!super.canEquip(item)) {
-			return false;
-		} else {
-			this.use(item);
-			return true;
-		}
+	public void unequip(int position) {
+		Equip equip = getEquipAt(position);
+		super.unequip(position);
+		inventory.add(equip);
 	}
 
 	@Override
 	public String toString() {
-		return String.format(Locale.ROOT,
+		return String.format(
 			"%s\n" +
 			"AP: %d\n" +
 			"EXP: %d / %d",

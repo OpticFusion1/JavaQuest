@@ -1,9 +1,6 @@
 package br.ufsc.gdev.zkirmisher.javaquest.entities;
 
 
-import java.util.Locale;
-
-
 /**
  * Equip subtype of Item.
  * <p>
@@ -27,8 +24,8 @@ public class Equip extends Item implements Cloneable {
 
 	// CONSTRUCTORS
 	/**
-	 * @param id Must be adequate for equipment, use Item.EQUIP as type digit.
-	 * @param description Fills as empty String if null.
+	 * @param id - must be adequate for equipment, use Item.EQUIP as type digit.
+	 * @param description - fills description as empty String if null.
 	 */
 	public Equip(
 		final String name, int id,
@@ -49,7 +46,7 @@ public class Equip extends Item implements Cloneable {
 	}
 
 	/**
-	 * @param id Must be adequate for equipment, use Item.EQUIP as type digit.
+	 * @param id - must be adequate for equipment, use Item.EQUIP as type digit.
 	 */
 	public Equip(
 		final String name, int id,
@@ -103,7 +100,7 @@ public class Equip extends Item implements Cloneable {
 				character.dexterity() >= dexterityRequirement &&
 				character.intelligence() >= intelligenceRequirement &&
 				character.level() >= levelRequirement &&
-				character.role().toLowerCase(Locale.ROOT).contains(roleRequirement.toLowerCase(Locale.ROOT));
+				character.role().toLowerCase().contains(roleRequirement.toLowerCase());
 	}
 
 	@Override
@@ -154,14 +151,14 @@ public class Equip extends Item implements Cloneable {
 	}
 
 	/**
-	 * NOTE: expresses criticalBonus as RAW CRITICAL (mili%) integer.
+	 * NOTE: expresses criticalBonus as raw critical (mili%) integer.
 	 */
 	public int criticalBonus() {
 		return criticalBonus;
 	}
 
 	/**
-	 * @param criticalBonus RAW CRITICAL (mili%) int value.
+	 * @param criticalBonus - raw critical (mili%) int value.
 	 */
 	public void setCriticalBonus(int criticalBonus) {
 		this.criticalBonus = criticalBonus;
@@ -213,7 +210,7 @@ public class Equip extends Item implements Cloneable {
 
 	/**
 	 * Sets Equip's required Role;
-	 * @param description Fills as empty String if null.
+	 * @param description - fills description as empty String if null.
 	 */
 	public void setRoleRequirement(final String roleRequirement) {
 		this.roleRequirement = roleRequirement != null ? roleRequirement : "";
