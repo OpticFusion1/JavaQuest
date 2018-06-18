@@ -1,6 +1,7 @@
 package br.ufsc.gdev.zkirmisher.javaquest;
 
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import br.ufsc.gdev.zkirmisher.javaquest.entities.Player;
@@ -90,7 +91,7 @@ public class TextGameView {
 			try {
 				role = read.nextInt();
 				read.nextLine(); //clear buffer
-			} catch (Exception e) {
+			} catch (InputMismatchException e) {
 				read.nextLine(); //clear buffer
 				continue;
 			}
@@ -112,6 +113,8 @@ public class TextGameView {
 					break;
 
 				case 0:
+					player.setRole("Aventureiro");
+					player.setStatCalculator(new AdventurerCalculator());
 					break;
 
 				default:

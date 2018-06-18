@@ -79,7 +79,8 @@ public class Player extends Character {
 				break;
 
 			default:
-				throw new IllegalArgumentException("Specified attribute doesn't exist.");
+				throw new IllegalArgumentException("O atributo especificado não existe.");//TODO translate back
+				//throw new IllegalArgumentException("Specified attribute doesn't exist.");
 		}
 
 		--attributePoints;
@@ -107,12 +108,15 @@ public class Player extends Character {
 
 		if (item instanceof Equip && canEquip((Equip) item)) {
 			Equip previous = getEquipAt(item.subtype());
+
 			unequip(previous);
+
 			equip((Equip) item);
 			inventory.remove(inventoryIndex, 1);
+
 			inventory.add(previous);
 
-		} else {
+		} else if (!(item instanceof Equip)) {
 			super.use(item);
 			inventory.remove(inventoryIndex, 1);
 		}
@@ -125,7 +129,11 @@ public class Player extends Character {
 	public void setName(final String name) {
 		if (!Pattern.compile("^\\w{3,15}$").matcher(name).matches() ||
 			Pattern.compile(".*_{2,}.*").matcher(name).matches()	) {
-			throw new IllegalArgumentException("Invalid name: Should have from 3 to 15 characters, those being only letters, numbers and \"_\". Can't have two \"_\"s in a row.");
+			throw new IllegalArgumentException(//TODO translate back v
+				"Esse nome não é válido. Nomes válidos devem ter de 3 a 15 caracteres, sendo " +
+				"apenas letras, números e \"_\". Não podem haver dois \"_\" seguidos." );
+				//"Invalid name: Should have from 3 to 15 characters, those being " +
+				//"only letters, numbers and \"_\". Can't have two \"_\"s in a row." );
 		}
 
 		super.setName(name);
@@ -135,20 +143,6 @@ public class Player extends Character {
 	public void levelUp() {
 		attributePoints += 5;
 		super.levelUp();
-	}
-
-	/**
-	 * Unequips item at the specified index and moves it to the inventory.
-	 *
-	 * @param position - uses Item.EQUIP_SUBTYPE as index.
-	 *
-	 * @throws ArrayIndexOutOfBoundsException
-	 */
-	@Override
-	public void unequip(int position) {
-		Equip equip = getEquipAt(position);
-		super.unequip(position);
-		inventory.add(equip);
 	}
 
 	@Override

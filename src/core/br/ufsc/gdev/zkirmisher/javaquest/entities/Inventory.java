@@ -1,7 +1,8 @@
 package br.ufsc.gdev.zkirmisher.javaquest.entities;
 
 
-import static java.lang.Math.min;
+import java.lang.Math;
+
 import br.ufsc.gdev.zkirmisher.util.Arrays;
 
 
@@ -101,9 +102,9 @@ public class Inventory {
 			int change = 0;
 
 			if (content[s].isEmpty()) {
-				change = min(count, item.maxCarry());
+				change = Math.min(count, item.maxCarry());
 			} else if (content[s].contains(item)) {
-				change = min(count, item.maxCarry() - content[s].stack());
+				change = Math.min(count, item.maxCarry() - content[s].stack());
 			}
 
 			content[s].add(item, change);

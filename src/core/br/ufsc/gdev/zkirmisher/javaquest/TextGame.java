@@ -17,17 +17,17 @@ public class TextGame {
 
 	// CONSTRUCTORS
 	public TextGame(
-		final Player player,
 		final Room start,
-		final Room end
+		final Room end,
+		final Player player
 	) {
-		this.player = player;
 		this.currentRoom = start;
 		this.finalRoom = end;
+		this.player = player;
 	}
 
 	public TextGame(final Room start, final Room end) {
-		this(new Player(), start, end);
+		this(start, end, null);
 	}
 
 
@@ -61,12 +61,24 @@ public class TextGame {
 		return player;
 	}
 
+	public void setPlayer(final Player player) {
+		this.player = player;
+	}
+
 	public boolean hasLost() {
 		return player.isDead();
 	}
 
 	public boolean hasWon() {
 		return currentRoom == finalRoom;
+	}
+
+	public Room getFinalRoom() {
+		return finalRoom;
+	}
+
+	public void setFinalRoom(final Room finalRoom) {
+		this.finalRoom = finalRoom;
 	}
 
 }

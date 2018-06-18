@@ -207,10 +207,11 @@ public class Game {
 		fork.loot().add(paddedArmour);
 
 
+		//FIXME playtest
+
 		//instanciando objetos de controle do jogo
 		TextGameView cli = new TextGameView();
-		cli.greet();
-		TextGame world = new TextGame(cli.createPlayer(), road, end);
+		TextGame world = new TextGame(road, end);
 		TextGameController game = new TextGameController(world, cli);
 
 		//roda o jogo

@@ -1,7 +1,7 @@
 package br.ufsc.gdev.zkirmisher.javaquest;
 
 
-import static java.lang.Math.max;
+import java.lang.Math;
 import java.util.Random;
 
 import br.ufsc.gdev.zkirmisher.javaquest.entities.*;
@@ -31,7 +31,7 @@ public class TextGameController {
 	private TextGame game;
 	private TextGameView view;
 
-	private boolean wantsToExit = false;
+	private boolean wantsToExit;
 
 
 	// CONSTRUCTORS
@@ -49,6 +49,13 @@ public class TextGameController {
 	 * Runs the Game.
 	 */
 	public void start() {
+		view.greet();
+
+		if (game.getPlayer() == null) {
+			game.setPlayer(view.createPlayer());
+		}
+
+		wantsToExit = false;
 		while (!wantsToExit && !game.hasLost()) {
 			view.show(game.getCurrentRoom());
 			if (game.hasWon()) break;
@@ -200,7 +207,6 @@ public class TextGameController {
 					}
 
 				} catch (Exception e) {
-					view.showMessage(e.getMessage());//FIXME using equips throws exception
 					view.showMessage("Esse item não está no seu inventório.");
 				}
 				break;
@@ -209,12 +215,12 @@ public class TextGameController {
 				try {
 					Equip equip = game.getPlayer().getEquipAt((int) action);
 
-					if (equip == null) {
+					if (game.getPlayer().unequip(equip)) {
+						game.getPlayer().inventory().add(equip);
+						view.showMessage(equip.name() + " foi desequipado e colocado no inventório.");
+					} else {
 						throw new NullPointerException();
 					}
-
-					game.getPlayer().unequip((int) action);
-					view.showMessage(equip.name() + " foi desequipado e colocado no inventório.");
 
 				} catch (Exception e) {
 					view.showMessage("Equipamento não encontrado.");
@@ -262,11 +268,11 @@ public class TextGameController {
 			}
 
 		} else {
-			enemy.wound(calculateDamage(player, enemy));
 			player.wound(calculateDamage(enemy, player));
+			enemy.wound(calculateDamage(player, enemy));
 		}
 
-		if (player.isDead()) {
+		if (game.hasLost()) {
 			view.showMessage("Você morreu!");
 			return;
 		}
@@ -289,10 +295,10 @@ public class TextGameController {
 
 		//choose damage source and reduction
 		int source, reduction;
-		if (attacker.spellDamage() >= attacker.attackDamage() && attacker.magic() >= 30) {
+		if (attacker.spellDamage() >= attacker.attackDamage() && attacker.magic() >= 40) {
 			source = attacker.spellDamage();
 			reduction = target.negation();
-			attacker.deplete(30);
+			attacker.deplete(40);
 			description += " joga uma bola de fogo em ";
 
 		} else {
@@ -309,9 +315,10 @@ public class TextGameController {
 		source *= crit;//NOTE: critical is applied before damage reduction
 
 		//damage calculation NOTE: damage reduction can't reduce damage to less than 20%
-		int damage = max(source - reduction, (int) (source * 0.2));
+		int damage = Math.max(source - reduction, (int) (source * 0.2));
 
 		description += damage + " de dano.";
+		description += (crit > 1) ? " Crítico!" : "";
 
 		view.showMessage(description);
 		return damage;

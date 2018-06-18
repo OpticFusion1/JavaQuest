@@ -1,7 +1,7 @@
 package br.ufsc.gdev.zkirmisher.javaquest.entities;
 
 
-import static java.lang.Math.min;
+import java.lang.Math;
 import java.util.function.Function;
 
 import br.ufsc.gdev.zkirmisher.javaquest.statistics.*;
@@ -214,7 +214,7 @@ public class Character {
 	}
 
 	public int health() {
-		return min(healthPoints, maxHealth());
+		return Math.min(healthPoints, maxHealth());
 	}
 
 	/**
@@ -236,7 +236,7 @@ public class Character {
 	}
 
 	public int magic() {
-		return min(magicPoints, maxMagic());
+		return Math.min(magicPoints, maxMagic());
 	}
 
 	/**
@@ -357,9 +357,9 @@ public class Character {
 		healthPoints = maxHealth();
 		magicPoints = maxMagic();
 		poison = 0;
-		strength = baseStrength + strengthEquipBonus();
-		dexterity = baseDexterity + dexterityEquipBonus();
-		intelligence = baseIntelligence + intelligenceEquipBonus();
+		strength = baseStrength;
+		dexterity = baseDexterity;
+		intelligence = baseIntelligence;
 		armourModifier = 0;
 		negationModifier = 0;
 	}
@@ -487,7 +487,7 @@ public class Character {
 	 * @return true if the item was equipped on the first place.
 	*/
 	public boolean unequip(final Equip item) {
-		if (!isEquipping(item)) {
+		if (item == null || !isEquipping(item)) {
 			return false;
 		}
 
@@ -497,8 +497,18 @@ public class Character {
 
     @Override
 	public String toString() {
-		return String.format(
+		return String.format(//TODO translate back
 			"%s" +
+			"%s - LVL %d %s\n" +
+			"HP: %d / %d\n" +
+			"MP: %d / %d\n" +
+			"%d contadores de veneno\n" +
+			"STR: %d (%d) (%d)\tAD: %d\n" +
+			"DEX: %d (%d) (%d)\tCR: %.2f%%\n" +
+			"INT: %d (%d) (%d)\tSD: %d\n" +
+			"Armadura: %d (%d)\tNegação Mágica: %d (%d)",
+			isDead() ? "[MORTO]\n" : "",
+			/*"%s" +
 			"%s - LVL %d %s\n" +
 			"HP: %d / %d\n" +
 			"MP: %d / %d\n" +
@@ -507,7 +517,7 @@ public class Character {
 			"DEX: %d (%d) (%d)\tCR: %.2f%%\n" +
 			"INT: %d (%d) (%d)\tSD: %d\n" +
 			"Armour: %d (%d)\tNegation: %d (%d)",
-			isDead() ? "[DEAD]\n" : "",
+			isDead() ? "[DEAD]\n" : "",*/
 			name, level, role,
 			health(), maxHealth(),
 			magic(), maxMagic(),
