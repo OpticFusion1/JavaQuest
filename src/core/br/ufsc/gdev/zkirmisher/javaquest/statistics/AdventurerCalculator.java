@@ -5,7 +5,7 @@ public class AdventurerCalculator extends PlayerCalculator {
 
 	// METHODS
 	public int hp(int level) {
-		return 100 * level;
+		return 100 * level + 21;
 	}
 
 	public int mp(int level) {

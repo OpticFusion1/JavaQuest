@@ -128,7 +128,7 @@ public class TextGameView {
 
 	public void bye() {
 		System.out.print(
-				"Saindo do mundo de JavaQuest...\n\n" +
+				"\n\nSaindo do mundo de JavaQuest...\n\n" +
 				"Pressione ENTER para terminar o programa\n> " );
 		read.nextLine();
 	}

@@ -51,19 +51,18 @@ public class Game {
 		Room gate = new Room(
 			"Muro de pedras.\n" +
 			"Você se encontra perante um muro de mais de dois metros de altura construído com pedras lisas que impedem a sua escalada.\n" +
-			"Um portão ao norte parece ser a única forma de passar pelo muro. Além disso, uma estrada de terra segue para o sul." );
+			"Um portão de madeira, ao norte, parece ser a única forma de passar pelo muro. Além disso, uma estrada de terra segue para o sul." );
 
 		Room house = new Room(
 			"Ao oeste da casa.\n" +
-			"Você está em um jardim ao oeste de uma casa branca com uma única porta de madeira.\n" +
-			"Há uma pequena caixa de correios aqui." );
+			"Você está em um jardim ao oeste de uma casa de madeira com uma única porta.\n" +
+			"Em meio à grama e às flores, um monolito escuro de formato retangular parece camuflar-se na escuridão da noite." );
 
 		Room end = new Room(
-			"Fim.\n" +
-			"Este é o fim.\n" +
-			"Ou talvez seja apenas um \n" +
-			"...\n" +
-			"INICIO\n\n" );
+			"Casa.\n" +
+			"A porta da frente está destrancada. Você decide entrar.\n" +
+			"Você se vê em um cômodo iluminado pela chama tremulante de uma vela acesa.\n" +
+			"A vela fica sobre uma mesa, ao lado de um pergaminho com os seguintes dizeres:" );
 
 
 		//caminhos
@@ -196,18 +195,15 @@ public class Game {
 
 		Item paddedArmour = new Equip(
 			"Armadura Leve", Item.EQUIP * 1000 + Item.EQUIP_BODY* 100 + 00,
-			"\tDEX -2\n\tArmadura +20\n\tHP +35",
+			"\tApenas para Aventureiros destemidos.\n\tDEX -2\n\tArmadura +20\n\tHP +35",
 			0, -2, 0, //primary stat bonuses
 			0, 0, 0, //damage bonuses
 			+20, 0, //reduction bonuses
 			+35, 0, //vitality bonuses
-			1, "", //level/role requirements
+			1, "Aventureiro", //level/role requirements
 			0, 0, 0 //stat requirements
 		);
 		fork.loot().add(paddedArmour);
-
-
-		//FIXME playtest
 
 		//instanciando objetos de controle do jogo
 		TextGameView cli = new TextGameView();

@@ -16,15 +16,16 @@ public class TextGameController {
 	// CONSTANTS
 	private static final int INTENT_NOT_FOUND = -1;
 	private static final int INTENT_HELP = 0;
-	private static final int INTENT_MOVE = 1;
-	private static final int INTENT_CHARACTER = 2;
-	private static final int INTENT_INVENTORY = 3;
-	private static final int INTENT_EQUIPMENT = 4;
-	private static final int INTENT_ITEM_USE = 5;
-	private static final int INTENT_UNEQUIP = 6;
-	private static final int INTENT_ITEM_GET = 7;
-	private static final int INTENT_BATTLE = 8;
-	private static final int INTENT_SPEND_AP = 9;
+	private static final int INTENT_EXAMINE = 1;
+	private static final int INTENT_MOVE = 2;
+	private static final int INTENT_CHARACTER = 3;
+	private static final int INTENT_INVENTORY = 4;
+	private static final int INTENT_EQUIPMENT = 5;
+	private static final int INTENT_ITEM_USE = 6;
+	private static final int INTENT_UNEQUIP = 7;
+	private static final int INTENT_ITEM_GET = 8;
+	private static final int INTENT_BATTLE = 9;
+	private static final int INTENT_SPEND_AP = 10;
 
 
 	// ATTRIBUTES
@@ -55,11 +56,23 @@ public class TextGameController {
 			game.setPlayer(view.createPlayer());
 		}
 
+		view.show(game.getCurrentRoom());
+
 		wantsToExit = false;
 		while (!wantsToExit && !game.hasLost()) {
-			view.show(game.getCurrentRoom());
-			if (game.hasWon()) break;
-			handleCommand(view.getUserCommand().toLowerCase());
+			if (game.hasWon()) {
+				view.showMessage(
+					"\tFim.\n" +
+					"\tEste é o fim.\n" +
+					"\tOu talvez seja apenas um \n" +
+					"\t...\n" +
+					"\tINICIO\n" );
+				view.getUserCommand();
+				break;
+
+			} else {
+				handleCommand(view.getUserCommand().toLowerCase());
+			}
 		}
 
 		view.bye();
@@ -77,10 +90,14 @@ public class TextGameController {
 		} else if (command.contains("ajud")) {
 			executeCommand(INTENT_HELP, command);
 
+		} else if (command.contains("examin") || command.contains("olhar") || command.contains("olhe") ||command.contains("ambiente")) {
+			executeCommand(INTENT_EXAMINE, command);
+
 		} else if (command.contains("persona")) {
 			executeCommand(INTENT_CHARACTER, command);
 
-		} else if (command.contains("itens") || command.contains("inventorio") || command.contains("inventório")) {
+		} else if (command.contains("itens") || command.contains("inventario") || command.contains("inventário") ||
+												command.contains("inventorio") || command.contains("inventório")) {
 			executeCommand(INTENT_INVENTORY, command);
 
 		} else if (command.matches("desequipar \\d{1,}")) {
@@ -123,13 +140,16 @@ public class TextGameController {
 			case INTENT_HELP:
 				view.showMessage(
 					"- Mova-se utilizando os nomes dos pontos cardeais. Ex: \"corra para o leste\".\n" +
-					"- Para pegar um item do chão, digite \"pegar x\", sendo x o [índice] do item indicado pelo jogo.\n" +
-					"- Digite \"inventório\" para mostrar os seus itens.\n" +
-					"- Para usar um item, digite \"usar x\", sendo x o [índice] do item mostrado no seu inventório.\n" +
-					"- Informações sobre o seu personagem são mostradas com o comando \"personagem\".\n" +
-					"- Digite \"equipamentos\" para visualizar os seus equipamentos.\n" +
-					"- Para desequipar um item, digite \"desequipar x\", sendo x o [índice] do equipamento.\n" +
-					"- Se quiser desistir, digite \"sair\".");
+					"- Para se localizar, tente examinar o ambiente ao seu redor, olhe em volta!\n" +
+					"- É sempre uma boa idéia perguntar para o seu \"personagem\" como vão as coisas.\n" +
+					"- Para pegar um item do chão, digite \"pegar x\" e ele será guardado no seu \"inventário\".\n" +
+					"- Para usar um de seus \"itens\", digite \"usar x\". Usar um \"equipamento\" o equipa.\n" +
+					"- Para desequipar um item, digite \"desequipar x\".\n" +
+					"- Se quiser desistir, basta pedir para sair :)" );
+				break;
+
+			case INTENT_EXAMINE:
+				view.show(game.getCurrentRoom());
 				break;
 
 			case INTENT_CHARACTER:
@@ -138,7 +158,7 @@ public class TextGameController {
 
 			case INTENT_INVENTORY:
 				if (game.getPlayer().inventory().isEmpty()) {
-					view.showMessage("Seu inventório está vazio.");
+					view.showMessage("Seu inventário está vazio.");
 				} else {
 					view.showMessage(game.getPlayer().inventory().toString());
 				}
@@ -165,9 +185,11 @@ public class TextGameController {
 
 			case INTENT_MOVE:
 				if (game.getCurrentRoom().getOccupant() != null) {
-					view.showMessage("Tem monstros por perto!");
+					view.showMessage("Tem monstros por perto, enfrente-os!");
 				} else if (!game.goToAdjacent((int) action)) {
 					view.showMessage("Você não pode ir para lá.");
+				} else {
+					view.show(game.getCurrentRoom());
 				}
 				break;
 
@@ -175,15 +197,15 @@ public class TextGameController {
 				try {
 					Item item = game.getCurrentRoom().loot().get((int) action);
 
-					if (item == null) {
+					if (item == null || game.getCurrentRoom().getOccupant() != null) {
 						throw new NullPointerException();
 					}
 
 					if (game.getPlayer().inventory().add(item)) {
-						view.showMessage(item.name() + " foi adicionado ao inventório.");
+						view.showMessage(item.name() + " foi adicionado ao inventário.");
 						game.getCurrentRoom().loot().remove((int) action, 1);
 					} else {
-						view.showMessage("Seu inventório já está cheio!");
+						view.showMessage("Seu inventário já está cheio!");
 					}
 
 				} catch (Exception e) {
@@ -207,7 +229,7 @@ public class TextGameController {
 					}
 
 				} catch (Exception e) {
-					view.showMessage("Esse item não está no seu inventório.");
+					view.showMessage("Esse item não está no seu inventário.");
 				}
 				break;
 
@@ -217,7 +239,7 @@ public class TextGameController {
 
 					if (game.getPlayer().unequip(equip)) {
 						game.getPlayer().inventory().add(equip);
-						view.showMessage(equip.name() + " foi desequipado e colocado no inventório.");
+						view.showMessage(equip.name() + " foi desequipado e colocado no inventário.");
 					} else {
 						throw new NullPointerException();
 					}
@@ -279,7 +301,7 @@ public class TextGameController {
 
 		if (enemy.isDead()) {
 			view.showMessage(enemy.name() + " está morto!");
-			game.getCurrentRoom().setOccupant(null); //TODO monster drops equipments
+			game.getCurrentRoom().setOccupant(null); //TODO monster drops
 
 			int level = player.level();
 			player.gainExperience(enemy.experience());
@@ -295,10 +317,10 @@ public class TextGameController {
 
 		//choose damage source and reduction
 		int source, reduction;
-		if (attacker.spellDamage() >= attacker.attackDamage() && attacker.magic() >= 40) {
+		if (attacker.spellDamage() >= attacker.attackDamage() && attacker.magic() >= 100) {
 			source = attacker.spellDamage();
 			reduction = target.negation();
-			attacker.deplete(40);
+			attacker.deplete(100);
 			description += " joga uma bola de fogo em ";
 
 		} else {
