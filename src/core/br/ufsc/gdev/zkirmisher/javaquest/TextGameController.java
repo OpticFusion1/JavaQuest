@@ -14,6 +14,7 @@ import br.ufsc.gdev.zkirmisher.javaquest.entities.Character;
 public class TextGameController {
 
 	// CONSTANTS
+	private static final int INTENT_CUSS = -2;
 	private static final int INTENT_NOT_FOUND = -1;
 	private static final int INTENT_HELP = 0;
 	private static final int INTENT_EXAMINE = 1;
@@ -66,8 +67,9 @@ public class TextGameController {
 					"\tEste é o fim.\n" +
 					"\tOu talvez seja apenas um \n" +
 					"\t...\n" +
-					"\tINICIO\n" );
+					"\tINICIO" );
 				view.getUserCommand();
+				view.showMessage("Parabéns! Você zerou o jogo!\n");
 				break;
 
 			} else {
@@ -124,11 +126,16 @@ public class TextGameController {
 		} else if (command.matches("usar \\d{1,}")) {
 			executeCommand(INTENT_ITEM_USE, Integer.parseInt(command.substring(5)));
 
-		} else if (command.contains("atacar") || command.contains("lutar") || command.contains("bater")) {
+		} else if (command.contains("atacar") || command.contains("luta") || command.contains("lute") || command.contains("bater")) {
 			executeCommand(INTENT_BATTLE, command);
 
 		} else if (command.matches("aumentar [a-z]{3}")) {
 			executeCommand(INTENT_SPEND_AP, command.substring(9, 12).toUpperCase());
+
+		} else if (command.contains("porra") || command.contains("caralho") || command.contains("fuder") ||
+				   command.contains("merda") || command.contains("buceta") || command.contains(" no cu") ||
+				   command.contains("puta") || command.contains("cacete")) {
+			executeCommand(INTENT_CUSS, command);
 
 		} else {
 			executeCommand(INTENT_NOT_FOUND, command);
@@ -143,8 +150,8 @@ public class TextGameController {
 					"- Para se localizar, tente examinar o ambiente ao seu redor, olhe em volta!\n" +
 					"- É sempre uma boa idéia perguntar para o seu \"personagem\" como vão as coisas.\n" +
 					"- Para pegar um item do chão, digite \"pegar x\" e ele será guardado no seu \"inventário\".\n" +
-					"- Para usar um de seus \"itens\", digite \"usar x\". Usar um \"equipamento\" o equipa.\n" +
-					"- Para desequipar um item, digite \"desequipar x\".\n" +
+					"- Para usar um de seus \"itens\", digite \"usar x\". Usar um de seus \"equipamentos\" o equipa.\n" +
+					"- Para desequipar um item, digite \"desequipar x\". DICA: 'x' refere-se a um [índice] indicado pelo jogo.\n" +
 					"- Se quiser desistir, basta pedir para sair :)" );
 				break;
 
@@ -185,7 +192,7 @@ public class TextGameController {
 
 			case INTENT_MOVE:
 				if (game.getCurrentRoom().getOccupant() != null) {
-					view.showMessage("Tem monstros por perto, enfrente-os!");
+					view.showMessage("Há monstros por perto! Você deve \"lutar\" com eles para prosseguir!");
 				} else if (!game.goToAdjacent((int) action)) {
 					view.showMessage("Você não pode ir para lá.");
 				} else {
@@ -269,6 +276,10 @@ public class TextGameController {
 				}
 				break;
 
+			case INTENT_CUSS:
+				view.showMessage("Seja mais educado!");
+				break;
+
 			case INTENT_NOT_FOUND: default:
 				view.showMessage("Não entendi o que você disse. Tente pedir \"ajuda\".");
 				break;
@@ -317,10 +328,10 @@ public class TextGameController {
 
 		//choose damage source and reduction
 		int source, reduction;
-		if (attacker.spellDamage() >= attacker.attackDamage() && attacker.magic() >= 100) {
+		if (attacker.spellDamage() >= attacker.attackDamage() && attacker.magic() >= 80) {
 			source = attacker.spellDamage();
 			reduction = target.negation();
-			attacker.deplete(100);
+			attacker.deplete(80);
 			description += " joga uma bola de fogo em ";
 
 		} else {

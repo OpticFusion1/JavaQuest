@@ -126,9 +126,9 @@ public class Game {
 
 		Item manaPotion = new Item(
 			"Poção de Mana (Pequena)", Item.USE * 1000 + 200,
-			"\tRecupera 35 MP",
+			"\tRecupera 50 MP",
 			user -> {
-				user.restore(35);
+				user.restore(50);
 			}
 		);
 		fork.loot().add(manaPotion);

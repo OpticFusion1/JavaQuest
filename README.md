@@ -2,12 +2,14 @@ JavaQuest
 ====
 
 -- Read the [License](https://github.com/Zkirmisher/JavaQuest/blob/master/LICENSE.txt) --<br/>
+-- Game [Download](http://bit.ly/javaquest-gd) (requires Java Runtime 8 or greater) --<br/>
 <br/>
 
 [EN] About
 --------
 
 A simple Point &amp; Click RPG game with turn-based combat mechanics built in Java.<br/>
+**P.S**: As of the current version, the game is a *Text Adventure* / *Interactive Fiction* only availabe in brazilian portuguese.<br/>
 This project is associated with **[G-Dev UFSC](https://g-devufsc.github.io/)**.<br/>
 <br/>
 
@@ -30,3 +32,5 @@ Personagens interagem entre si na forma de **diálogo**, seguindo padrões de fa
 No combate também são relevantes os **itens** utilizados por cada um, como vestimentas e armas **equipaveis** para diminuir o dano causado aos seus pontos de vida e aumentar o dano causado ao oponente ou **consumíveis** para curar o personagem. Tipicamente esses itens são adquiridos de outros personagens, podendo ser comprados em diálogos ou recebidos como recompensa por ganhar um combate.<br/>
 
 O usuário do software seria inserido no contexto fantasioso de JavaQuest ao criar um personagem nesse mundo e jogar o jogo interagindo e desenvolvendo as características do seu “avatar”.<br/>
+
+**P.S**: Na versão atual, o jogo é uma aventura em texto ao estilo dos clássicos como Dunnet e Zork.
