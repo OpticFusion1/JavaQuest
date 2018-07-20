@@ -2,6 +2,11 @@ package br.ufsc.gdev.zkirmisher.util;
 
 
 /**
+ * OUT OF DATE, SHOULD IMPORT FROM .../POO/utilities
+ */
+
+
+/**
  * Custom Arrays implementation with static utility functions.
  */
 public class Arrays {
